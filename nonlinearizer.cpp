@@ -14,7 +14,7 @@ vector<function<double(const vector<double>&)>>
 wrap_up() {
   auto functions = LightGBM::PredictTreeLeafPtr;
   vector<function<double(const vector<double>&)>> funs;
-  for(int i=0; i < 10000; i++ ) {
+  for(int i=0; i < 8000; i++ ) {
     std::function<double(const double*)> fun = *functions[i];
     auto wrapped = [fun, i](const vector<double>& v) {
         // change to array
