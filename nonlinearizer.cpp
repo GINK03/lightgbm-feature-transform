@@ -3,7 +3,7 @@
 #include <vector>
 #include <list>
 #include <functional>
-#include "./gbdt_prediction.cpp"
+#include "gbdt_prediction.cpp"
 
 #include <fstream>
 #include <sstream>
@@ -17,13 +17,6 @@ wrap_up() {
   for(int i=0; i < 8000; i++ ) {
     std::function<double(const double*)> fun = *functions[i];
     auto wrapped = [fun, i](const vector<double>& v) {
-        // change to array
-        //cout << "no tree." << i << endl;
-        /*for(auto d : v ) {
-          cout << d << endl;
-        }*/
-        
-        //cout << "scaned." << v.size() << endl;
         const double* toward = &v[0];
         return fun(toward);
       };
@@ -53,20 +46,19 @@ int get_max_index(const std::string& filename) {
   }
   return maxIndex;
 }
-std::vector<tuple<double, vector<double>>> data_load() {
-  std::cout << "search Max Index Size " << endl;
-  int maxIndex = get_max_index("./dataset/test");
-  std::cout << "Max Index Size is " << maxIndex << std::endl;
+std::vector<tuple<double, vector<double>>> data_load(std::string fileName = "./dataset/test", int limit = 50000 ) {
+  std::cerr << "search Max Index Size " << endl;
+  int maxIndex = get_max_index(fileName);
+  std::cerr << "Max Index Size is " << maxIndex << std::endl;
 
-  const int Limit = 50000; 
   int count = 0;
 
-  std::cout << "build dataset to memory... " << std::endl;
+  std::cerr << "build dataset to memory... " << std::endl;
   std::vector<std::tuple<double, vector<double>>> contains;
-  auto infile = ifstream("./dataset/test"); std::string line;
+  auto infile = ifstream(fileName); std::string line;
   while (std::getline(infile, line)) {
     count += 1;
-    if( count > Limit ) break;
+    if( count > limit ) break;
     try {
       double answer = 0.0;
       std::vector<double> oneline(maxIndex);
@@ -93,10 +85,10 @@ std::vector<tuple<double, vector<double>>> data_load() {
       }
       contains.push_back( std::make_tuple(answer, oneline) );
     } catch ( std::exception& e ) {
-      std::cout << "Exp::" << e.what() << std::endl;
+      std::cerr << "Exp::" << e.what() << std::endl;
     }
   }
-  std::cout << "Total Dataset size is " << contains.size() << std::endl;
+  std::cerr << "Total Dataset size is " << contains.size() << std::endl;
   return contains;
 }
 int main() {
