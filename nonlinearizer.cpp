@@ -32,21 +32,45 @@ wrap_up() {
   return funs;
 }
 
-vector<tuple<double, vector<double>>> data_load() {
-  auto infile = ifstream("./dataset/test");
-  std::string line;
-  cout << "a b 2" << endl;
+int get_max_index(const std::string& filename) {
+  auto infile = std::ifstream(filename); std::string line;
+  int maxIndex = 0;
+  while (std::getline(infile, line)) {
+    std::vector<string> pairs; std::istringstream stream(line); string field;
+    while (std::getline(stream, field, ' ') ) {
+      pairs.push_back(field);
+    }
+    for(auto pair : pairs ) {
+      if(pair.find(':') != std::string::npos) {
+        std::string tmp; vector<string> parse; auto ss = std::istringstream(pair);
+        while (std::getline(ss, tmp, ':') ) {
+          parse.push_back(tmp);
+        }
+        int index = std::stoi(parse[0]);
+        if( maxIndex < index ) maxIndex = index;
+      }
+    }
+  }
+  return maxIndex;
+}
+std::vector<tuple<double, vector<double>>> data_load() {
+  std::cout << "search Max Index Size " << endl;
+  int maxIndex = get_max_index("./dataset/test");
+  std::cout << "Max Index Size is " << maxIndex << std::endl;
 
-  vector<std::tuple<double, vector<double>>> contains;
-  const int Limit = 10000; 
+  const int Limit = 60000; 
   int count = 0;
+
+  std::cout << "build dataset to memory... " << std::endl;
+  std::vector<std::tuple<double, vector<double>>> contains;
+  auto infile = ifstream("./dataset/test"); std::string line;
   while (std::getline(infile, line)) {
     count += 1;
     if( count > Limit ) break;
     //cout << line << endl;
     try {
       double anser = 0.0;
-      std::vector<double> oneline(300000);
+      std::vector<double> oneline(maxIndex);
       //cout << "data_load1 " << oneline.size() << endl;
       
       vector<string> pairs; std::istringstream stream(line); string field;
@@ -75,12 +99,13 @@ vector<tuple<double, vector<double>>> data_load() {
       cout << "Exp::" << e.what() << endl;
     }
   }
+  std::cout << "Total Dataset size is " << contains.size() << std::endl;
   return contains;
 }
 int main() {
   auto funs = wrap_up();
   auto contains = data_load();
-  cout << "size" << contains.size() << endl;
+  return 0;
   for( auto contain : contains ) {
     vector<double> Xs = std::get<1>(contain);
     double answer = std::get<0>(contain);
