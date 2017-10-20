@@ -58,7 +58,7 @@ std::vector<tuple<double, vector<double>>> data_load() {
   int maxIndex = get_max_index("./dataset/test");
   std::cout << "Max Index Size is " << maxIndex << std::endl;
 
-  const int Limit = 60000; 
+  const int Limit = 50000; 
   int count = 0;
 
   std::cout << "build dataset to memory... " << std::endl;
@@ -67,9 +67,8 @@ std::vector<tuple<double, vector<double>>> data_load() {
   while (std::getline(infile, line)) {
     count += 1;
     if( count > Limit ) break;
-    //cout << line << endl;
     try {
-      double anser = 0.0;
+      double answer = 0.0;
       std::vector<double> oneline(maxIndex);
       //cout << "data_load1 " << oneline.size() << endl;
       
@@ -79,24 +78,22 @@ std::vector<tuple<double, vector<double>>> data_load() {
       }
       for(auto pair : pairs ) {
         if(pair.find(':') != std::string::npos) {
-          string tmp; vector<string> parse; auto ss = std::istringstream(pair);
+          std::string tmp; std::vector<std::string> parse; auto ss = std::istringstream(pair);
           while (std::getline(ss, tmp, ':') ) {
             parse.push_back(tmp);
           }
 
-          int index = stoi(parse[0]);
-          const double data = stod(parse[1]);
+          int index = std::stoi(parse[0]);
+          const double data = std::stod(parse[1]);
           oneline[index] = data;
-          //cout << pair << endl;
         }
         if( pair.find(':') == std::string::npos) {
-          anser = stod(pair);
+          answer = std::stod(pair);
         }
       }
-      //cout << "data_load2 " << oneline.size() << endl;
-      contains.push_back( std::make_tuple(anser, oneline) );
+      contains.push_back( std::make_tuple(answer, oneline) );
     } catch ( std::exception& e ) {
-      cout << "Exp::" << e.what() << endl;
+      std::cout << "Exp::" << e.what() << std::endl;
     }
   }
   std::cout << "Total Dataset size is " << contains.size() << std::endl;
@@ -105,16 +102,15 @@ std::vector<tuple<double, vector<double>>> data_load() {
 int main() {
   auto funs = wrap_up();
   auto contains = data_load();
-  return 0;
   for( auto contain : contains ) {
-    vector<double> Xs = std::get<1>(contain);
+    std::vector<double> Xs = std::get<1>(contain);
     double answer = std::get<0>(contain);
-    vector<double> nonlinears;
-    string nonl = to_string(answer) + " ";
+    std::vector<double> nonlinears;
+    std::string nonl = std::to_string(answer) + " ";
     for( auto fun : funs ) { 
       nonlinears.push_back( fun(Xs) );
-      nonl += to_string( fun(Xs) ) + " ";
+      nonl += std::to_string( fun(Xs) ) + " ";
     }
-    cout << nonl << endl;
+    std::cout << nonl << std::endl;
   }
 }
