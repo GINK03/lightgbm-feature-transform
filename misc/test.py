@@ -2,11 +2,12 @@ import f
 
 
 fps = []
-for i in range(100):
+for i in range(500):
   fp = eval('f.PredictTree%d'%i)
   fps.append(fp)
 
 import statistics
+import json
 for line in open('../misc/xgb_format'):
   line = line.strip()
   es = line.split()
@@ -25,7 +26,9 @@ for line in open('../misc/xgb_format'):
   ws = []
   for fp in fps:
     ws.append( fp(vals) )
-  print(ws)
-  print(sum(ws))
-
+  X = ws
+  y = ans
+  print(y, sum(ws))
+  
+  print( json.dumps( [y,X], ensure_ascii=False ) )
 print('a')
