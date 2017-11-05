@@ -66,7 +66,20 @@ convert_model_language=cpp
 ```console
 $ lightgbm config=config/train.lightgbm.conf  
 ...
+[LightGBM] [Info] 47.847420 seconds elapsed, finished iteration 499
+[LightGBM] [Info] Iteration:500, training l1 : 0.249542
+```
 
+## 出力したモデルを木で非線形化するPythonのコードに変換
+```console
+$ cd misc
+$ python3 formatter.py > f.py
+...(適宜取りこぼしたエラーをvimやEmacs等で修正してください)
+```
+
+## 特徴量を木で非線形化したデータセットに変換
+```console
+$ python3 test.py > ../shrinkaged/shrinkaged.jsonp
 ```
 
 ## LightGBM + Linear Regressionでの精度
