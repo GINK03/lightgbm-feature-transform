@@ -16,6 +16,10 @@ GBM系のアルゴリズムの一種であるLightGBMを用いることで、Lig
 
 
 ## 図示
+<div align="center">
+  <img width="600px" src="https://user-images.githubusercontent.com/4949982/32413605-21c77ea8-c258-11e7-9e1d-421ff8053192.png">
+</div>
+<div align="center"> 図1. 全体の流れ </div>
 
 ## 仕組みの説明
 
