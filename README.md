@@ -87,6 +87,9 @@ $ python3 test.py > ../shrinkaged/shrinkaged.jsonp
 $ cd shrinkaged
 $ python3 linear_reg.py --data_gen
 $ python3 linear_reg.py --fit
+train mse: 0.24
+test mse: 0.21
 ```
+testデータセットで0.21の平均絶対誤差と、LightGBM単体での性能に逼迫し、上回っているとわかりました  
 
 ## まとめ
