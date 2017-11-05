@@ -62,6 +62,10 @@ convert_model=misc/gbdt_prediction.cpp
 convert_model_language=cpp
 ```
 
+これも50万次元程度のウルトラスパースマトリックスなので、コマンドを叩いて学習します  
+```console
+$ lightgbm config=config/train.lightgbm.conf
+```
 
 ## LightGBM + Linear Regressionでの精度
 
