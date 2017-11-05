@@ -30,8 +30,38 @@ GBM系のアルゴリズムの一種であるLightGBMを用いることで、Lig
 6. ScikitLearnで非線形化した特徴でLinear Regressionを行い、星の数を予想します　
 
 ## データセット
+[ここでご紹介していただいている方法](https://qiita.com/nannoki/items/9473ac358872f891de0c)で、コーパスを作りました。  
+
+コーパスのダウンロードのみはこちらか行えます。  
 
 ## LightGBM(L1)単独での精度
+LightGBM単体での精度はどうでしょうか。
+
+このようなパラメータで学習を行いました。
+```console
+task = train
+boosting_type = gbdt
+objective = regression
+metric_freq = 1
+is_training_metric = true
+max_bin = 255
+data = misc/xgb_format
+valid_data = misc/xgb_format
+num_trees = 500
+learning_rate = 0.30
+num_leaves = 100
+tree_learner = serial
+feature_fraction = 0.9
+bagging_fraction = 0.8
+min_data_in_leaf = 100
+min_sum_hessian_in_leaf = 5.0
+is_enable_sparse = true
+use_two_round_loading = false
+output_model = misc/LightGBM_model.txt
+convert_model=misc/gbdt_prediction.cpp
+convert_model_language=cpp
+```
+
 
 ## LightGBM + Linear Regressionでの精度
 
