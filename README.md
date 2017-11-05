@@ -32,7 +32,7 @@ GBM系のアルゴリズムの一種であるLightGBMを用いることで、Lig
 ## データセット
 [ここでご紹介していただいている方法](https://qiita.com/nannoki/items/9473ac358872f891de0c)で、コーパスを作りました。  
 
-コーパスのダウンロードのみはこちらか行えます。  
+[コーパスのダウンロードのみはこちら](https://www.dropbox.com/s/iw7zyfebmc4rnk2/yahoo.jsonp?dl=0)から行えます。  
 
 ## LightGBM(L1)単独での精度
 LightGBM単体での精度はどうでしょうか。
