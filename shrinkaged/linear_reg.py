@@ -10,6 +10,8 @@ if '--data_gen' in sys.argv:
   ys, Xs, yts, Xts = [], [], [], []
   for index, line in enumerate(open('./shrinkaged.jsonp')):
     line = line.strip()
+    if index%1000 == 0:
+      print(line)
     try:
       obj = json.loads(line)
     except json.decoder.JSONDecodeError as e:
