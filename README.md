@@ -117,7 +117,7 @@ test mse: 0.21
 testデータセットで0.21の平均絶対誤差と、LightGBM単体での性能に逼迫し、上回っているとわかりました  
 
 ## 精度などの比較
-単純なACCURARYという意味での精度であれば、以下の関係が成り立っていそうです
+単純なACCURACYという意味での精度であれば、以下の関係が成り立っていそうです
 ```
 LightGBM = LinearRegression(NonLinear) > LinearRegression(Native)
 ```
