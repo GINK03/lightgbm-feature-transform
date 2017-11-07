@@ -95,6 +95,7 @@ $ lightgbm config=config/train.lightgbm.conf
 [LightGBM] [Info] 47.847420 seconds elapsed, finished iteration 499
 [LightGBM] [Info] Iteration:500, training l1 : 0.249542
 ```
+テストデータに置ける誤差は先ほどより小さく、0.25程度ということになりました
 
 ## LightGBMでの非線形化の前処理
 ### 出力したC++のモデルを非線形化するPythonのコードに変換
