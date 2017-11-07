@@ -2,7 +2,7 @@
 # Gradient Boosting Machineで特徴量を非線形化
 
 ## Practical Lessons from Predicting Clicks on Ads at Facebook
-Facebook社のGradient Boosting Machineで特徴量を非線形化して、[CTRを予想するという問題の論文](http://quinonero.net/Publications/predicting-clicks-facebook.pdf)からだいぶ時間が、その論文のユニークさは私の中では色あせることなくしばらく残っています。  
+Facebook社のGradient Boosting Machineで特徴量を非線形化して、[CTRを予想するという問題の論文](http://quinonero.net/Publications/predicting-clicks-facebook.pdf)からだいぶ時間が立っていますが、その論文のユニークさは私の中では色あせることなくしばらく残っています。  
 
 原理的には、単純でGrandient Boosting Machineの特徴量で複数の特徴量を選択して決定木で一つの非線形な状態にして、数値にすることでより高精度でリニアレグレッションなどで予想できるようになります  
 
