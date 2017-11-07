@@ -15,12 +15,13 @@ GBM系のアルゴリズムの一種であるLightGBMを用いることで、Lig
 
 ## 図示
 <div align="center">
-  <img width="600px" src="https://user-images.githubusercontent.com/4949982/32413605-21c77ea8-c258-11e7-9e1d-421ff8053192.png">
+  <img width="600px" src="https://user-images.githubusercontent.com/4949982/32472819-d152591a-c3a7-11e7-8584-bdabd95730b7.png">
 </div>
-<div align="center"> 図1. 全体の流れ </div>
+<div align="center"> 図1. FBの論文の引用 </div>
+GBMで特徴量を非線形化して、その非線形になった特徴量の係数をLinear Regressionで計算します
 
 ## 仕組みの説明
-1. Yahoo!Japna社のAPIで商品のレビュー情報を取得します  
+1. 映画.comの映画のレビュー情報を取得します  
 2. レビューの星の数と、形態素解析してベクトル化したテキストのペア情報を作ります
 3. これをそのままLightGBMで学習させます  
 4. LightGBMで作成したモデル情報を解析し、木構造の粒度に分解します
@@ -28,9 +29,8 @@ GBM系のアルゴリズムの一種であるLightGBMを用いることで、Lig
 6. ScikitLearnで非線形化した特徴でLinear Regressionを行い、星の数を予想します　
 
 ## データセット
-[ここでご紹介していただいている方法](https://qiita.com/nannoki/items/9473ac358872f891de0c)で、コーパスを作りました。  
+[作成したコーパスはここからダウンロード](https://www.dropbox.com/s/t9jitxtdv1znkql/reviews.json?dl=0)ができます
 
-[コーパスのダウンロードのみはこちら](https://www.dropbox.com/s/iw7zyfebmc4rnk2/yahoo.jsonp?dl=0)から行えます。  
 
 ## LightGBM(L1)単独での精度
 LightGBM単体での精度はどうでしょうか。
@@ -67,6 +67,31 @@ $ lightgbm config=config/train.lightgbm.conf
 [LightGBM] [Info] 47.847420 seconds elapsed, finished iteration 499
 [LightGBM] [Info] Iteration:500, training l1 : 0.249542
 ```
+
+## Linear Regressionとの比較
+Linear Regressionより性能が高くなると期待できるので比較検討します  
+今回の使用したデータセットは50万程度の特徴量ですので、単純にLinear Regressionで計算したものと比較します  
+```console
+$ ./train -s 11 ../xgb_format 
+iter  1 act 7.950e+06 pre 7.837e+06 delta 1.671e+00 f 9.896e+06 |g| 2.196e+07 CG   2
+cg reaches trust region boundary
+iter  2 act 3.798e+05 pre 3.755e+05 delta 6.685e+00 f 1.946e+06 |g| 8.440e+05 CG   5
+cg reaches trust region boundary
+iter  3 act 2.320e+05 pre 2.300e+05 delta 2.674e+01 f 1.566e+06 |g| 1.298e+05 CG  12
+cg reaches trust region boundary
+iter  4 act 2.481e+05 pre 2.476e+05 delta 1.070e+02 f 1.334e+06 |g| 4.600e+04 CG  28
+cg reaches trust region boundary
+iter  5 act 3.378e+05 pre 3.489e+05 delta 4.278e+02 f 1.086e+06 |g| 4.329e+04 CG 104
+iter  6 act 1.306e+05 pre 1.698e+05 delta 4.278e+02 f 7.481e+05 |g| 9.367e+04 CG 180
+iter  7 act 4.090e+04 pre 1.129e+05 delta 1.117e+02 f 6.175e+05 |g| 2.774e+04 CG 419
+```
+学習が完了しました
+```console
+$ ./predict ../xgb_format xgb_format.model result
+Mean squared error = 0.785621 (regression)
+Squared correlation coefficient = 0.424459 (regression)
+```
+MSE(Mean Squared Error)は0.78という感じで、星半分以上間違えています
 
 ## 出力したモデルを木で非線形化するPythonのコードに変換
 ```console
