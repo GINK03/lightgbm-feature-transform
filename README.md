@@ -54,7 +54,7 @@ iter  7 act 4.090e+04 pre 1.129e+05 delta 1.117e+02 f 6.175e+05 |g| 2.774e+04 CG
 ```
 学習が完了しました
 ```console
-$ ./predict ../xgb_format xgb_format.model result
+$ ./predict ../xgb_format_test xgb_format.model result
 Mean squared error = 0.785621 (regression)
 Squared correlation coefficient = 0.424459 (regression)
 ```
@@ -72,7 +72,7 @@ metric_freq = 1
 is_training_metric = true
 max_bin = 255
 data = misc/xgb_format
-valid_data = misc/xgb_format
+valid_data = misc/xgb_format_test
 num_trees = 500
 learning_rate = 0.30
 num_leaves = 100
@@ -88,8 +88,7 @@ convert_model=misc/gbdt_prediction.cpp
 convert_model_language=cpp
 ```
 
-これも50万次元程度のスパースベクトルなので、numpyなどのアレーにせず、そのまま使えます  
-
+50万次元程度のスパースベクトルなので、numpyなどのアレーにせず、そのままバイナリのLightGBMに投入します  
 ```console
 $ lightgbm config=config/train.lightgbm.conf  
 ...
