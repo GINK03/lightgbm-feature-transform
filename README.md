@@ -1,5 +1,5 @@
 
-# Gradient Dicision Boosting Tree Machineで特徴量を非線形化
+# Gradient Boosting Machineで特徴量を非線形化
 
 ## Practical Lessons from Predicting Clicks on Ads at Facebook
 Facebook社のGradient Boosting Machineで特徴量を非線形化して、[CTRを予想するという問題の論文](http://quinonero.net/Publications/predicting-clicks-facebook.pdf)からだいぶ時間が、その論文のユニークさは私の中では色あせることなくしばらく残っています。  
