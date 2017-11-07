@@ -20,6 +20,10 @@ GBM系のアルゴリズムの一種であるLightGBMを用いることで、Lig
 <div align="center"> 図1. FBの論文の引用 </div>
 GBMで特徴量を非線形化して、その非線形になった特徴量の係数をLinear Regressionで計算します
 
+## 問題設定
+映画.comのレビューのテキストを形態素解析してBoWのベクトルを作り、そのベクトル値から、星の数をレグレッションで当てます  
+単語は多様性があるので、とても高次元になりますが、単純なLinear RegressionとLightGBMとLightGBMで非線形化+Linear Regressionで比較します  
+
 ## 全体の流れ
 1. 映画.comの映画のレビュー情報を取得します  
 2. レビューの星の数と、形態素解析してベクトル化したテキストのBoWと星の数を表現したペア情報を作ります
@@ -31,6 +35,30 @@ GBMで特徴量を非線形化して、その非線形になった特徴量の�
 ## データセット
 [作成したコーパスはここからダウンロード](https://www.dropbox.com/s/t9jitxtdv1znkql/reviews.json?dl=0)ができます
 
+## Linear Regressionのみの精度
+Linear Regressionより性能が高くなると期待できるので比較検討します  
+今回の使用したデータセットは50万程度の特徴量ですので、単純にLinear Regressionで計算したものと比較します  
+```console
+$ ./train -s 11 ../xgb_format 
+iter  1 act 7.950e+06 pre 7.837e+06 delta 1.671e+00 f 9.896e+06 |g| 2.196e+07 CG   2
+cg reaches trust region boundary
+iter  2 act 3.798e+05 pre 3.755e+05 delta 6.685e+00 f 1.946e+06 |g| 8.440e+05 CG   5
+cg reaches trust region boundary
+iter  3 act 2.320e+05 pre 2.300e+05 delta 2.674e+01 f 1.566e+06 |g| 1.298e+05 CG  12
+cg reaches trust region boundary
+iter  4 act 2.481e+05 pre 2.476e+05 delta 1.070e+02 f 1.334e+06 |g| 4.600e+04 CG  28
+cg reaches trust region boundary
+iter  5 act 3.378e+05 pre 3.489e+05 delta 4.278e+02 f 1.086e+06 |g| 4.329e+04 CG 104
+iter  6 act 1.306e+05 pre 1.698e+05 delta 4.278e+02 f 7.481e+05 |g| 9.367e+04 CG 180
+iter  7 act 4.090e+04 pre 1.129e+05 delta 1.117e+02 f 6.175e+05 |g| 2.774e+04 CG 419
+```
+学習が完了しました
+```console
+$ ./predict ../xgb_format xgb_format.model result
+Mean squared error = 0.785621 (regression)
+Squared correlation coefficient = 0.424459 (regression)
+```
+MSE(Mean Squared Error)は0.78という感じで、星半分以上間違えています
 
 ## LightGBMのみでの精度
 LightGBM単体での精度はどうか検討します。  
@@ -69,44 +97,20 @@ $ lightgbm config=config/train.lightgbm.conf
 [LightGBM] [Info] Iteration:500, training l1 : 0.249542
 ```
 
-## Linear Regressionのみの精度
-Linear Regressionより性能が高くなると期待できるので比較検討します  
-今回の使用したデータセットは50万程度の特徴量ですので、単純にLinear Regressionで計算したものと比較します  
-```console
-$ ./train -s 11 ../xgb_format 
-iter  1 act 7.950e+06 pre 7.837e+06 delta 1.671e+00 f 9.896e+06 |g| 2.196e+07 CG   2
-cg reaches trust region boundary
-iter  2 act 3.798e+05 pre 3.755e+05 delta 6.685e+00 f 1.946e+06 |g| 8.440e+05 CG   5
-cg reaches trust region boundary
-iter  3 act 2.320e+05 pre 2.300e+05 delta 2.674e+01 f 1.566e+06 |g| 1.298e+05 CG  12
-cg reaches trust region boundary
-iter  4 act 2.481e+05 pre 2.476e+05 delta 1.070e+02 f 1.334e+06 |g| 4.600e+04 CG  28
-cg reaches trust region boundary
-iter  5 act 3.378e+05 pre 3.489e+05 delta 4.278e+02 f 1.086e+06 |g| 4.329e+04 CG 104
-iter  6 act 1.306e+05 pre 1.698e+05 delta 4.278e+02 f 7.481e+05 |g| 9.367e+04 CG 180
-iter  7 act 4.090e+04 pre 1.129e+05 delta 1.117e+02 f 6.175e+05 |g| 2.774e+04 CG 419
-```
-学習が完了しました
-```console
-$ ./predict ../xgb_format xgb_format.model result
-Mean squared error = 0.785621 (regression)
-Squared correlation coefficient = 0.424459 (regression)
-```
-MSE(Mean Squared Error)は0.78という感じで、星半分以上間違えています
-
-## 出力したC++のモデルを非線形化するPythonのコードに変換
+## LightGBMでの非線形化の前処理
+### 出力したC++のモデルを非線形化するPythonのコードに変換
 ```console
 $ cd misc
 $ python3 formatter.py > f.py
 ...(適宜取りこぼしたエラーをvimやEmacs等で修正してください)
 ```
 
-## 特徴量を非線形化したデータセットに変換
+### 特徴量を非線形化したデータセットに変換
 ```console
 $ python3 test.py > ../shrinkaged/shrinkaged.jsonp
 ```
 
-## Linear Regression(Nonlinear)での精度
+## LightGBMで非線形化 + Linear Regressionでの精度
 ```console
 $ cd shrinkaged
 $ python3 linear_reg.py --data_gen
