@@ -94,14 +94,14 @@ Squared correlation coefficient = 0.424459 (regression)
 ```
 MSE(Mean Squared Error)は0.78という感じで、星半分以上間違えています
 
-## 出力したモデルを木で非線形化するPythonのコードに変換
+## 出力したC++のモデルを非線形化するPythonのコードに変換
 ```console
 $ cd misc
 $ python3 formatter.py > f.py
 ...(適宜取りこぼしたエラーをvimやEmacs等で修正してください)
 ```
 
-## 特徴量を木で非線形化したデータセットに変換
+## 特徴量を非線形化したデータセットに変換
 ```console
 $ python3 test.py > ../shrinkaged/shrinkaged.jsonp
 ```
